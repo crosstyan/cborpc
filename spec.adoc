@@ -1,7 +1,7 @@
 = Specification
 
 This protocol is expected to used over
-(https://en.wikipedia.org/wiki/WebSocket)[WebSockets].  However, the server (the
+https://en.wikipedia.org/wiki/WebSocket[WebSockets].  However, the server (the
 transportation provider) basically does not care/intervene about the payload. As
 long as the function caller and function actor (callee) agree on which
 server/port/end-point to connect to, the communication could be established.
