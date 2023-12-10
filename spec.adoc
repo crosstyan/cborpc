@@ -1,0 +1,71 @@
+= Specification
+
+This protocol is expected to used over
+[WebSockets](https://en.wikipedia.org/wiki/WebSocket).  However, the server (the
+transportation provider) basically does not care/intervene about the payload. As
+long as the function caller and function actor (callee) agree on which
+server/port/end-point to connect to, the communication could be established.
+
+An additional layer to identify the caller and actor might be needed, but let's
+assume that only one actor is connected to one server at a time, and multiple
+callers can connect and send requests to the actor.
+
+== Protocol flow
+
+- Request
+- Response
+- Notification
+
+:msg_id_type: u16 | u32 | u64
+:method_type: str | u8 | u16 | u32 | u64
+:error_code_type: u16/u32/u64
+:error_type: [<error_code> <error_msg>]
+
+=== Request
+
+----
+[<magic>, <msg-id>, <method>, <params>]
+----
+
+- `magic` `REQ_MAGIC` `u8/simple`
+- `msg-id` `{msg_id_type}`
+- `method` `{method_type}`
+- `params` array of `any` (only positional arguments are supported)
+
+=== Response
+
+----
+[<magic>, <msg-id>, <error>, <result>]
+----
+
+- `magic` `RES_MAGIC` `u8/simple`
+- `msg-id` `{msg_id_type}`
+- `error` `{error_type}` where `null` means no error, and if error happens,
+  `error_code` should be non-zero, with an optional `error_msg`.
+- `result` `any` 
+
+=== Notification
+
+----
+[<magic>, <method>, <params>]
+----
+
+- `magic` `NOTI_MAGIC` `u8/simple`
+- `method` `{method_type}`
+- `params` `any`
+
+== Special Behavior
+
+=== `wellknown.method.ListAvailableMethod`
+
+This method is used to list all available methods on the actor.
+
+Request with an void array of params, and response with an map of method name as key,
+and method id as value.
+
+=== `wellknown.error.InvalidMethod`
+
+This error is used to indicate that the method is not found on the actor.
+
+An optional error message that suggests
+similar methods could be provided.

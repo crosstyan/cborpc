@@ -1,0 +1,11 @@
+[wellknown]
+[[magic]]
+REQ = 0x00
+RESP = 0x01
+NOTI = 0x02
+
+[[method]]
+ListAvailableMethod = 0x00
+
+[[error]]
+InvalidMethod = 0x40
